@@ -47,6 +47,7 @@ public static class DependencyInjection
         services.AddScoped<IOfficeRepository, OfficeRepository>();
         services.AddScoped<IMaterialRepository, MaterialRepository>();
         services.AddScoped<IWorkOrderRepository, WorkOrderRepository>();
+        services.AddScoped<IEscalationRepository, EscalationRepository>();
 
         // Domain event dispatcher
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
