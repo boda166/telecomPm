@@ -36,7 +36,11 @@ public class ApiAuthorizationPoliciesTests
     {
         var methods = controllerType
             .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
-            .Where(m => m.GetCustomAttributes<HttpMethodAttribute>().Any())
+            .Where(m => m.GetCustomAttributes().Any(a => a.GetType().Name.EndsWith("HttpGetAttribute", StringComparison.Ordinal)
+                || a.GetType().Name.EndsWith("HttpPostAttribute", StringComparison.Ordinal)
+                || a.GetType().Name.EndsWith("HttpPutAttribute", StringComparison.Ordinal)
+                || a.GetType().Name.EndsWith("HttpPatchAttribute", StringComparison.Ordinal)
+                || a.GetType().Name.EndsWith("HttpDeleteAttribute", StringComparison.Ordinal)))
             .ToArray();
 
         methods
