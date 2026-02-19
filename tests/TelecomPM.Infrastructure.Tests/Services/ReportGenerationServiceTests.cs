@@ -118,7 +118,7 @@ public class ReportGenerationServiceTests
     private static Site CreateSite()
     {
         return Site.Create(
-            "SITE-001",
+            "TNT001",
             "Site 1",
             "OMC-1",
             Guid.NewGuid(),

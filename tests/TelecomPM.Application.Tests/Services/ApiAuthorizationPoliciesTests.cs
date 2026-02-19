@@ -55,10 +55,13 @@ public class ApiAuthorizationPoliciesTests
                 || a.GetType().Name.EndsWith("HttpDeleteAttribute", StringComparison.Ordinal)))
             .ToArray();
 
-        methods
-            .SelectMany(m => m.GetCustomAttributes<AuthorizeAttribute>())
-            .Select(a => a.Policy)
-            .Should()
-            .Contain(policy);
+        var allPolicies = controllerType
+            .GetCustomAttributes<AuthorizeAttribute>()
+            .Concat(methods.SelectMany(m =>
+                m.GetCustomAttributes<AuthorizeAttribute>()))
+            .Select(a => a.Policy);
+
+        allPolicies.Should().Contain(policy,
+            because: $"{controllerType.Name} must enforce {policy}");
     }
 }

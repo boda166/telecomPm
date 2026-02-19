@@ -10,6 +10,7 @@ using TelecomPM.Api.Middleware;
 using TelecomPM.Api.Authorization;
 using TelecomPm.Api.Services;
 using TelecomPM.Application;
+using TelecomPM.Application.Common.Interfaces;
 using TelecomPM.Infrastructure;
 using TelecomPM.Infrastructure.Persistence;
 using TelecomPM.Infrastructure.Persistence.SeedData;
@@ -32,9 +33,9 @@ builder.Services
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
 builder.Services.AddControllers(options =>
-    {
-        options.Filters.Add<ValidateModelStateFilter>();
-    })
+{
+    options.Filters.Add<ValidateModelStateFilter>();
+})
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -54,11 +55,6 @@ builder.Services.AddCors(options =>
 
         if (allowedOrigins.Length == 0)
         {
-            if (builder.Environment.IsProduction())
-            {
-                throw new InvalidOperationException("Cors:AllowedOrigins must be configured in production.");
-            }
-
             policy.WithOrigins("https://localhost:4200")
                 .AllowAnyHeader()
                 .AllowAnyMethod();
