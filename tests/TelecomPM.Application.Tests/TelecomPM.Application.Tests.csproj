@@ -4,7 +4,7 @@
     <IsPackable>false</IsPackable>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <IsTestProject>false</IsTestProject>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.2" />
@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\TelecomPm.Application\TelecomPm.Application.csproj" />
+    <ProjectReference Include="..\..\src\TelecomPm.Api\TelecomPm.Api.csproj" />
   </ItemGroup>
 </Project>
 

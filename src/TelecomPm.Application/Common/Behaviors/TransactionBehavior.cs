@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using TelecomPM.Application.Common;
 using TelecomPM.Domain.Interfaces.Repositories;
 
 public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
@@ -26,7 +27,7 @@ public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        if (!IsCommand(request) || _unitOfWork.HasActiveTransaction)
+        if (request is not ICommand || _unitOfWork.HasActiveTransaction)
         {
             return await next();
         }
@@ -43,10 +44,5 @@ public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
             _logger.LogError(ex, "Transaction failed for {RequestName}", typeof(TRequest).Name);
             throw;
         }
-    }
-
-    private static bool IsCommand(TRequest request)
-    {
-        return typeof(TRequest).Name.EndsWith("Command", StringComparison.Ordinal);
     }
 }
