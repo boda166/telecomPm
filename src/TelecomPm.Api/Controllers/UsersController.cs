@@ -4,6 +4,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using TelecomPm.Api.Contracts.Users;
 using TelecomPM.Application.Commands.Users.CreateUser;
 using TelecomPM.Application.Commands.Users.UpdateUser;
@@ -20,6 +21,7 @@ using TelecomPM.Domain.Enums;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public sealed class UsersController : ApiControllerBase
 {
     private readonly ICurrentUserService _currentUserService;
