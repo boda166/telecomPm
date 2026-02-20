@@ -1,0 +1,78 @@
+using FluentAssertions;
+using TelecomPM.Domain.Entities.WorkOrders;
+using TelecomPM.Domain.Enums;
+using TelecomPM.Infrastructure.Services;
+using Xunit;
+
+namespace TelecomPM.Infrastructure.Tests.Services;
+
+public class SlaClockServiceTests
+{
+    private readonly SlaClockService _service = new();
+
+    [Theory]
+    [InlineData(SlaClass.P1, 59, false)]
+    [InlineData(SlaClass.P1, 61, true)]
+    [InlineData(SlaClass.P2, 239, false)]
+    [InlineData(SlaClass.P2, 241, true)]
+    [InlineData(SlaClass.P3, 1439, false)]
+    [InlineData(SlaClass.P3, 1441, true)]
+    public void IsBreached_ShouldRespectFrozenSlaMatrix(SlaClass slaClass, int responseMinutes, bool expectedBreached)
+    {
+        var createdAtUtc = DateTime.UtcNow;
+
+        var isBreached = _service.IsBreached(createdAtUtc, responseMinutes, slaClass);
+
+        isBreached.Should().Be(expectedBreached);
+    }
+
+    [Fact]
+    public void EvaluateStatus_ShouldReturnOnTime_WhenFarFromDeadline()
+    {
+        var workOrder = WorkOrder.Create("WO-SLA-1", "S-1", "CAI", SlaClass.P1, "Issue");
+        SetCreatedAt(workOrder, DateTime.UtcNow.AddMinutes(-10));
+
+        var status = _service.EvaluateStatus(workOrder);
+
+        status.Should().Be(SlaStatus.OnTime);
+    }
+
+    [Fact]
+    public void EvaluateStatus_ShouldReturnAtRisk_WhenWithinThirtyMinutesToDeadline()
+    {
+        var workOrder = WorkOrder.Create("WO-SLA-2", "S-2", "CAI", SlaClass.P1, "Issue");
+        SetCreatedAt(workOrder, DateTime.UtcNow.AddMinutes(-45));
+
+        var status = _service.EvaluateStatus(workOrder);
+
+        status.Should().Be(SlaStatus.AtRisk);
+    }
+
+    [Fact]
+    public void EvaluateStatus_ShouldReturnBreached_WhenPastDeadline()
+    {
+        var workOrder = WorkOrder.Create("WO-SLA-3", "S-3", "CAI", SlaClass.P1, "Issue");
+        SetCreatedAt(workOrder, DateTime.UtcNow.AddHours(-2));
+
+        var status = _service.EvaluateStatus(workOrder);
+
+        status.Should().Be(SlaStatus.Breached);
+    }
+
+    [Fact]
+    public void EvaluateStatus_ShouldReturnOnTime_ForBacklogP4()
+    {
+        var workOrder = WorkOrder.Create("WO-SLA-4", "S-4", "CAI", SlaClass.P4, "Issue");
+
+        var status = _service.EvaluateStatus(workOrder);
+
+        status.Should().Be(SlaStatus.OnTime);
+    }
+
+    private static void SetCreatedAt(WorkOrder workOrder, DateTime createdAtUtc)
+    {
+        typeof(WorkOrder)
+            .GetProperty("CreatedAt")!
+            .SetValue(workOrder, createdAtUtc);
+    }
+}

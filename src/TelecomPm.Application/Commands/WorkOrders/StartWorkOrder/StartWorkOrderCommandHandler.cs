@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using TelecomPM.Application.Common;
+using TelecomPM.Application.Commands.AuditLogs.LogAuditEntry;
 using TelecomPM.Application.DTOs.WorkOrders;
 using TelecomPM.Domain.Interfaces.Repositories;
 
@@ -14,15 +15,18 @@ public class StartWorkOrderCommandHandler : IRequestHandler<StartWorkOrderComman
     private readonly IWorkOrderRepository _workOrderRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly ISender _sender;
 
     public StartWorkOrderCommandHandler(
         IWorkOrderRepository workOrderRepository,
         IUnitOfWork unitOfWork,
-        IMapper mapper)
+        IMapper mapper,
+        ISender sender)
     {
         _workOrderRepository = workOrderRepository;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _sender = sender;
     }
 
     public async Task<Result<WorkOrderDto>> Handle(StartWorkOrderCommand request, CancellationToken cancellationToken)
@@ -33,8 +37,21 @@ public class StartWorkOrderCommandHandler : IRequestHandler<StartWorkOrderComman
 
         try
         {
+            var previousState = workOrder.Status.ToString();
             workOrder.Start();
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            await _sender.Send(new LogAuditEntryCommand
+            {
+                EntityType = "WorkOrder",
+                EntityId = workOrder.Id,
+                Action = "Started",
+                ActorId = Guid.Empty,
+                ActorRole = "System",
+                PreviousState = previousState,
+                NewState = workOrder.Status.ToString()
+            }, cancellationToken);
+
             return Result.Success(_mapper.Map<WorkOrderDto>(workOrder));
         }
         catch (Exception ex)

@@ -1,4 +1,5 @@
 using TelecomPM.Domain.Common;
+using TelecomPM.Domain.Events.WorkOrderEvents;
 using TelecomPM.Domain.Enums;
 using TelecomPM.Domain.Exceptions;
 
@@ -6,6 +7,8 @@ namespace TelecomPM.Domain.Entities.WorkOrders;
 
 public sealed class WorkOrder : AggregateRoot<Guid>
 {
+    private bool _wasBreached;
+
     public string WoNumber { get; private set; } = string.Empty;
     public string SiteCode { get; private set; } = string.Empty;
     public string OfficeCode { get; private set; } = string.Empty;
@@ -115,6 +118,21 @@ public sealed class WorkOrder : AggregateRoot<Guid>
             throw new DomainException("Closed or cancelled work order cannot be cancelled");
 
         Status = WorkOrderStatus.Cancelled;
+    }
+
+    public void ApplySlaStatus(SlaStatus slaStatus, DateTime evaluatedAtUtc)
+    {
+        if (slaStatus == SlaStatus.Breached)
+        {
+            if (_wasBreached)
+                return;
+
+            _wasBreached = true;
+            AddDomainEvent(new SlaBreachedEvent(Id, WoNumber, ResolutionDeadlineUtc, evaluatedAtUtc));
+            return;
+        }
+
+        _wasBreached = false;
     }
 
     private static TimeSpan GetResponseSla(SlaClass slaClass)
