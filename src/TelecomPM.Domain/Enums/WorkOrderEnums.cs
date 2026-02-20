@@ -20,3 +20,10 @@ public enum WorkOrderStatus
     Rework = 8,
     Cancelled = 9
 }
+
+public enum SlaStatus
+{
+    OnTime = 1,
+    AtRisk = 2,
+    Breached = 3
+}

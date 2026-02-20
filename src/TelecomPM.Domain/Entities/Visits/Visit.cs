@@ -211,7 +211,7 @@ public sealed class Visit : AggregateRoot<Guid>
         ReviewerNotes = correctionNotes;
         Status = VisitStatus.NeedsCorrection;
 
-        AddDomainEvent(new VisitCorrectionRequestedEvent(Id, SiteId, EngineerId, correctionNotes));
+        AddDomainEvent(new VisitCorrectionRequestedEvent(Id, SiteId, EngineerId, reviewerId, correctionNotes));
     }
 
     public void Reject(Guid reviewerId, string reviewerName, string rejectionReason)
@@ -233,7 +233,7 @@ public sealed class Visit : AggregateRoot<Guid>
         ReviewerNotes = rejectionReason;
         Status = VisitStatus.Rejected;
 
-        AddDomainEvent(new VisitRejectedEvent(Id, SiteId, EngineerId, rejectionReason));
+        AddDomainEvent(new VisitRejectedEvent(Id, SiteId, EngineerId, reviewerId, rejectionReason));
     }
 
     public void Cancel(string reason)

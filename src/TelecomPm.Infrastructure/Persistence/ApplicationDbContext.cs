@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System.Reflection;
 using TelecomPM.Domain.Common;
+using TelecomPM.Domain.Entities.ApprovalRecords;
+using TelecomPM.Domain.Entities.AuditLogs;
 using TelecomPM.Domain.Entities.Materials;
 using TelecomPM.Domain.Entities.Offices;
 using TelecomPM.Domain.Entities.Sites;
@@ -56,6 +58,10 @@ public class ApplicationDbContext : DbContext
 
     // Escalations
     public DbSet<Escalation> Escalations => Set<Escalation>();
+
+    // Audit & Approvals
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+    public DbSet<ApprovalRecord> ApprovalRecords => Set<ApprovalRecord>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

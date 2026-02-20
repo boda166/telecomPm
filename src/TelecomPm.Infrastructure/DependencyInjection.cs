@@ -50,6 +50,8 @@ public static class DependencyInjection
         services.AddScoped<IMaterialRepository, MaterialRepository>();
         services.AddScoped<IWorkOrderRepository, WorkOrderRepository>();
         services.AddScoped<IEscalationRepository, EscalationRepository>();
+        services.AddScoped<IAuditLogRepository, AuditLogRepository>();
+        services.AddScoped<IApprovalRecordRepository, ApprovalRecordRepository>();
 
         // Domain event dispatcher
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
@@ -86,6 +88,7 @@ public static class DependencyInjection
         // Domain Services with Infrastructure dependencies (Repository-dependent)
         services.AddScoped<IVisitNumberGeneratorService, VisitNumberGeneratorService>();
         services.AddScoped<IMaterialStockService, MaterialStockService>();
+        services.AddScoped<ISlaClockService, SlaClockService>();
 
         // HttpContextAccessor for CurrentUserService
         services.AddHttpContextAccessor();
