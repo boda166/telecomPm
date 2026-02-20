@@ -68,12 +68,24 @@ builder.Services.AddCors(options =>
 });
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-var secretKey = jwtSettings["Secret"];
+var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET");
+
+if (string.IsNullOrWhiteSpace(secretKey) && builder.Environment.IsProduction())
+{
+    throw new InvalidOperationException("JWT_SECRET environment variable is required in Production.");
+}
+
+if (string.IsNullOrWhiteSpace(secretKey))
+{
+    secretKey = jwtSettings["Secret"];
+}
 
 if (string.IsNullOrWhiteSpace(secretKey))
 {
     throw new InvalidOperationException("JWT secret key is not configured.");
 }
+
+builder.Configuration["JwtSettings:Secret"] = secretKey;
 
 builder.Services
     .AddAuthentication(options =>
