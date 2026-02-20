@@ -4,6 +4,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using TelecomPM.Api.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using TelecomPm.Api.Contracts.Sites;
@@ -11,7 +12,7 @@ using TelecomPm.Api.Mappings;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+[Authorize(Policy = ApiAuthorizationPolicies.CanViewSites)]
 public sealed class SitesController : ApiControllerBase
 {
     [HttpGet("{siteId:guid}")]

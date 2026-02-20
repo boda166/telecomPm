@@ -4,13 +4,14 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using TelecomPM.Api.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TelecomPm.Api.Mappings;
 using TelecomPM.Application.Queries.Reports.GetVisitCompletionTrends;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+[Authorize(Policy = ApiAuthorizationPolicies.CanViewAnalytics)]
 public sealed class AnalyticsController : ApiControllerBase
 {
     [HttpGet("engineer-performance/{engineerId:guid}")]

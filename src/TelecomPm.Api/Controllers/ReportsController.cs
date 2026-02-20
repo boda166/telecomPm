@@ -4,12 +4,13 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using TelecomPM.Api.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TelecomPm.Api.Mappings;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+[Authorize(Policy = ApiAuthorizationPolicies.CanViewReports)]
 public sealed class ReportsController : ApiControllerBase
 {
     [HttpGet("visits/{visitId:guid}")]

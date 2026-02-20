@@ -4,6 +4,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using TelecomPM.Api.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using TelecomPm.Api.Contracts.Offices;
@@ -15,6 +16,7 @@ using TelecomPm.Api.Mappings;
 public sealed class OfficesController : ApiControllerBase
 {
     [HttpPost]
+    [Authorize(Policy = ApiAuthorizationPolicies.CanManageOffices)]
     public async Task<IActionResult> Create(
         [FromBody] CreateOfficeRequest request,
         CancellationToken cancellationToken)
@@ -67,6 +69,7 @@ public sealed class OfficesController : ApiControllerBase
     }
 
     [HttpPut("{officeId:guid}")]
+    [Authorize(Policy = ApiAuthorizationPolicies.CanManageOffices)]
     public async Task<IActionResult> Update(
         Guid officeId,
         [FromBody] UpdateOfficeRequest request,
@@ -77,6 +80,7 @@ public sealed class OfficesController : ApiControllerBase
     }
 
     [HttpPatch("{officeId:guid}/contact")]
+    [Authorize(Policy = ApiAuthorizationPolicies.CanManageOffices)]
     public async Task<IActionResult> UpdateContact(
         Guid officeId,
         [FromBody] UpdateOfficeContactRequest request,
@@ -87,6 +91,7 @@ public sealed class OfficesController : ApiControllerBase
     }
 
     [HttpDelete("{officeId:guid}")]
+    [Authorize(Policy = ApiAuthorizationPolicies.CanManageOffices)]
     public async Task<IActionResult> Delete(
         Guid officeId,
         CancellationToken cancellationToken)

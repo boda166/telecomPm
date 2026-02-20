@@ -9,6 +9,12 @@ public sealed class VisitDurationCalculatorService : IVisitDurationCalculatorSer
 {
     public TimeSpan CalculateEstimatedDuration(Site site)
     {
+        // If the site already has an estimated duration set (e.g. seeded or calculated elsewhere), respect it.
+        if (site.EstimatedVisitDurationMinutes > 0)
+        {
+            return TimeSpan.FromMinutes(site.EstimatedVisitDurationMinutes);
+        }
+
         var baseMinutes = 60; // 1 hour base
 
         // Add time based on complexity

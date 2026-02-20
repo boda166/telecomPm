@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using TelecomPM.Api.Authorization;
 using TelecomPm.Api.Contracts.Users;
 using TelecomPm.Api.Mappings;
 using TelecomPM.Application.Common.Interfaces;
@@ -22,6 +23,7 @@ public sealed class UsersController : ApiControllerBase
         _currentUserService = currentUserService;
     }
     [HttpPost]
+    [Authorize(Policy = ApiAuthorizationPolicies.CanManageUsers)]
     public async Task<IActionResult> Create(
         [FromBody] CreateUserRequest request,
         CancellationToken cancellationToken)
@@ -49,6 +51,7 @@ public sealed class UsersController : ApiControllerBase
     }
 
     [HttpPut("{userId:guid}")]
+    [Authorize(Policy = ApiAuthorizationPolicies.CanManageUsers)]
     public async Task<IActionResult> Update(
         Guid userId,
         [FromBody] UpdateUserRequest request,
@@ -59,6 +62,7 @@ public sealed class UsersController : ApiControllerBase
     }
 
     [HttpDelete("{userId:guid}")]
+    [Authorize(Policy = ApiAuthorizationPolicies.CanManageUsers)]
     public async Task<IActionResult> Delete(
         Guid userId,
         CancellationToken cancellationToken)
@@ -68,6 +72,7 @@ public sealed class UsersController : ApiControllerBase
     }
 
     [HttpPatch("{userId:guid}/role")]
+    [Authorize(Policy = ApiAuthorizationPolicies.CanManageUsers)]
     public async Task<IActionResult> ChangeRole(
         Guid userId,
         [FromBody] ChangeUserRoleRequest request,
@@ -78,6 +83,7 @@ public sealed class UsersController : ApiControllerBase
     }
 
     [HttpPatch("{userId:guid}/activate")]
+    [Authorize(Policy = ApiAuthorizationPolicies.CanManageUsers)]
     public async Task<IActionResult> Activate(
         Guid userId,
         CancellationToken cancellationToken)
@@ -87,6 +93,7 @@ public sealed class UsersController : ApiControllerBase
     }
 
     [HttpPatch("{userId:guid}/deactivate")]
+    [Authorize(Policy = ApiAuthorizationPolicies.CanManageUsers)]
     public async Task<IActionResult> Deactivate(
         Guid userId,
         CancellationToken cancellationToken)
@@ -131,17 +138,9 @@ public sealed class UsersController : ApiControllerBase
 
     private string ResolveDeletionActor()
     {
-        if (_currentUserService.IsAuthenticated)
+        if (_currentUserService.IsAuthenticated && _currentUserService.UserId != Guid.Empty)
         {
-            if (!string.IsNullOrWhiteSpace(_currentUserService.Email))
-            {
-                return _currentUserService.Email;
-            }
-
-            if (_currentUserService.UserId != Guid.Empty)
-            {
-                return _currentUserService.UserId.ToString();
-            }
+            return _currentUserService.UserId.ToString();
         }
 
         return "System";

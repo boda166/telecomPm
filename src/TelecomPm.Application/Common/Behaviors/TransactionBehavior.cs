@@ -3,8 +3,10 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using TelecomPM.Application.Common;
 using TelecomPM.Domain.Interfaces.Repositories;
 
 public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
@@ -26,7 +28,11 @@ public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        if (!IsCommand(request) || _unitOfWork.HasActiveTransaction)
+        // Determine whether the request is a command. Support both non-generic ICommand and generic ICommand<TResponse>.
+        var isCommand = request is ICommand
+            || request.GetType().GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommand<>));
+
+        if (!isCommand || _unitOfWork.HasActiveTransaction)
         {
             return await next();
         }
@@ -43,10 +49,5 @@ public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
             _logger.LogError(ex, "Transaction failed for {RequestName}", typeof(TRequest).Name);
             throw;
         }
-    }
-
-    private static bool IsCommand(TRequest request)
-    {
-        return typeof(TRequest).Name.EndsWith("Command", StringComparison.Ordinal);
     }
 }

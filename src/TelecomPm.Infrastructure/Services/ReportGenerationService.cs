@@ -23,7 +23,15 @@ public class ReportGenerationService : IReportGenerationService
 
     static ReportGenerationService()
     {
-        QuestPDF.Settings.License = LicenseType.Community;
+        try
+        {
+            QuestPDF.Settings.License = LicenseType.Community;
+        }
+        catch
+        {
+            // Some test environments (CI runners) may not have native SkiaSharp/HarfBuzz dependencies available.
+            // Swallow initialization errors so tests that don't use PDF generation can run.
+        }
     }
 
     public ReportGenerationService(
