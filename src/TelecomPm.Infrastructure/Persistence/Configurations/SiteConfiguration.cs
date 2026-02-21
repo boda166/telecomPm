@@ -92,6 +92,12 @@ public class SiteConfiguration : IEntityTypeConfiguration<Site>
         builder.Property(s => s.BSCCode)
             .HasMaxLength(50);
 
+        builder.Property(s => s.TelecomEgyptName)
+            .HasMaxLength(200);
+
+        builder.Property(s => s.OperationalZone)
+            .HasMaxLength(100);
+
         builder.Property(s => s.Subcontractor)
             .HasMaxLength(200);
 

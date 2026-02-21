@@ -30,6 +30,8 @@ public sealed class Site : AggregateRoot<Guid>
     // BSC Info
     public string BSCName { get; private set; } = string.Empty;
     public string BSCCode { get; private set; } = string.Empty;
+    public string? TelecomEgyptName { get; private set; }
+    public string? OperationalZone { get; private set; }
     
     // Contractor
     public string Subcontractor { get; private set; } = string.Empty;
@@ -122,6 +124,12 @@ public sealed class Site : AggregateRoot<Guid>
     {
         BSCName = bscName;
         BSCCode = bscCode;
+    }
+
+    public void SetNetworkContext(string? telecomEgyptName, string? operationalZone)
+    {
+        TelecomEgyptName = telecomEgyptName;
+        OperationalZone = operationalZone;
     }
 
     public void SetContractorInfo(string subcontractor, string maintenanceArea)

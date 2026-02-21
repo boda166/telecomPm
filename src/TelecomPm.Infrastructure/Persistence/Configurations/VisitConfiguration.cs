@@ -34,6 +34,9 @@ public class VisitConfiguration : IEntityTypeConfiguration<Visit>
             .IsRequired()
             .HasMaxLength(200);
 
+        builder.Property(v => v.ContactPersonName)
+            .HasMaxLength(200);
+
         builder.Property(v => v.SupervisorName)
             .HasMaxLength(200);
 

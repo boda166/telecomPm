@@ -17,6 +17,7 @@ public sealed class Visit : AggregateRoot<Guid>
     // Team
     public Guid EngineerId { get; private set; }
     public string EngineerName { get; private set; } = string.Empty;
+    public string? ContactPersonName { get; private set; }
     public Guid? SupervisorId { get; private set; }
     public string? SupervisorName { get; private set; }
     public List<string> TechnicianNames { get; private set; } = new();
@@ -118,6 +119,13 @@ public sealed class Visit : AggregateRoot<Guid>
         {
             TechnicianNames.Add(technicianName);
         }
+    }
+
+    public void SetContactPersonName(string? contactPersonName)
+    {
+        ContactPersonName = string.IsNullOrWhiteSpace(contactPersonName)
+            ? null
+            : contactPersonName.Trim();
     }
 
     public void StartVisit(Coordinates location)
