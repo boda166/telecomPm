@@ -36,6 +36,8 @@ public sealed class Site : AggregateRoot<Guid>
     public string MaintenanceArea { get; private set; } = string.Empty;
     public string? ZTEMonitoringStatus { get; private set; }
     public string? GeneralNotes { get; private set; }
+    public SiteEnclosureType? EnclosureType { get; private set; }
+    public string? EnclosureTypeRaw { get; private set; }
     
     // Components (Navigation Properties)
     public SiteTowerInfo TowerInfo { get; private set; } = null!;
@@ -132,6 +134,12 @@ public sealed class Site : AggregateRoot<Guid>
     {
         ZTEMonitoringStatus = zteMonitoringStatus;
         GeneralNotes = generalNotes;
+    }
+
+    public void SetEnclosureInfo(SiteEnclosureType? enclosureType, string? enclosureTypeRaw)
+    {
+        EnclosureType = enclosureType;
+        EnclosureTypeRaw = enclosureTypeRaw;
     }
 
     public void SetTowerInfo(SiteTowerInfo towerInfo)

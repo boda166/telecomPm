@@ -31,6 +31,13 @@ public enum SiteStatus
     Decommissioned = 4
 }
 
+public enum SiteEnclosureType
+{
+    Shelter = 1,
+    OutdoorCabinet = 2,
+    Grill = 3
+}
+
 public enum TowerType
 {
     GFTower = 1,        // Ground Floor Tower

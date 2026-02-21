@@ -104,6 +104,9 @@ public class SiteConfiguration : IEntityTypeConfiguration<Site>
         builder.Property(s => s.GeneralNotes)
             .HasMaxLength(2000);
 
+        builder.Property(s => s.EnclosureTypeRaw)
+            .HasMaxLength(100);
+
         builder.OwnsOne(s => s.RFStatus, rf =>
         {
             rf.Property(r => r.TotalRFCount)
