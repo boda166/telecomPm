@@ -42,6 +42,7 @@ public sealed class ChangePasswordCommandHandler : IRequestHandler<ChangePasswor
             return Result.Failure("Current password is incorrect.");
 
         user.SetPassword(request.NewPassword, _passwordHasher);
+        user.ClearPasswordChangeRequirement();
 
         await _userRepository.UpdateAsync(user, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

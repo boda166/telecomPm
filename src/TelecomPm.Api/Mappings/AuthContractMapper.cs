@@ -46,6 +46,7 @@ public static class AuthContractMapper
             UserId = dto.UserId,
             Email = dto.Email,
             Role = dto.Role,
-            OfficeId = dto.OfficeId
+            OfficeId = dto.OfficeId,
+            RequiresPasswordChange = dto.RequiresPasswordChange
         };
 }
