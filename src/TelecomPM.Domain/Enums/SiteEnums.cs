@@ -43,7 +43,8 @@ public enum TowerType
     Billboard = 8,
     FlagPole = 9,
     MobileStation = 10,
-    SpecialCamouflage = 11
+    SpecialCamouflage = 11,
+    RTStubTower = 12
 }
 
 public enum TransmissionType
