@@ -10,11 +10,13 @@ using TelecomPM.Domain.Entities.Materials;
 using TelecomPM.Domain.Entities.ChecklistTemplates;
 using TelecomPM.Domain.Entities.Offices;
 using TelecomPM.Domain.Entities.Sites;
+using TelecomPM.Domain.Entities.ApplicationRoles;
 using TelecomPM.Domain.Entities.SystemSettings;
 using TelecomPM.Domain.Entities.Users;
 using TelecomPM.Domain.Enums;
 using TelecomPM.Domain.ValueObjects;
 using TelecomPM.Application.Common.Interfaces;
+using TelecomPM.Application.Security;
 using TelecomPM.Infrastructure.Persistence;
 
 public class DatabaseSeeder
@@ -51,6 +53,12 @@ public class DatabaseSeeder
             if (!await _context.Users.AnyAsync())
             {
                 await SeedUsersAsync();
+                await _context.SaveChangesAsync();
+            }
+
+            if (!await _context.ApplicationRoles.AnyAsync())
+            {
+                await SeedApplicationRolesAsync();
                 await _context.SaveChangesAsync();
             }
 
@@ -437,6 +445,71 @@ public class DatabaseSeeder
 
         await _context.SystemSettings.AddRangeAsync(settings);
         _logger.LogInformation("Seeded {Count} system settings", settings.Count);
+    }
+
+    private async Task SeedApplicationRolesAsync()
+    {
+        var roles = new List<ApplicationRole>
+        {
+            ApplicationRole.Create(
+                UserRole.Admin.ToString(),
+                "Administrator",
+                "System administrator with full access.",
+                isSystem: true,
+                isActive: true,
+                RolePermissionDefaults.GetDefaultPermissions(UserRole.Admin.ToString())),
+
+            ApplicationRole.Create(
+                UserRole.Manager.ToString(),
+                "Business Manager",
+                "Business manager role.",
+                isSystem: false,
+                isActive: true,
+                RolePermissionDefaults.GetDefaultPermissions(UserRole.Manager.ToString())),
+
+            ApplicationRole.Create(
+                UserRole.Supervisor.ToString(),
+                "Supervisor",
+                "Supervises field operations.",
+                isSystem: false,
+                isActive: true,
+                RolePermissionDefaults.GetDefaultPermissions(UserRole.Supervisor.ToString())),
+
+            ApplicationRole.Create(
+                UserRole.PMEngineer.ToString(),
+                "Field Engineer",
+                "Performs site visits and submissions.",
+                isSystem: true,
+                isActive: true,
+                RolePermissionDefaults.GetDefaultPermissions(UserRole.PMEngineer.ToString())),
+
+            ApplicationRole.Create(
+                UserRole.Technician.ToString(),
+                "Technician",
+                "Field technician with read/assist access.",
+                isSystem: false,
+                isActive: true,
+                RolePermissionDefaults.GetDefaultPermissions(UserRole.Technician.ToString())),
+
+            ApplicationRole.Create(
+                "Viewer",
+                "Viewer",
+                "Read-only access profile.",
+                isSystem: false,
+                isActive: true,
+                new[]
+                {
+                    PermissionConstants.SitesView,
+                    PermissionConstants.VisitsView,
+                    PermissionConstants.WorkOrdersView,
+                    PermissionConstants.ReportsView,
+                    PermissionConstants.KpiView,
+                    PermissionConstants.MaterialsView
+                })
+        };
+
+        await _context.ApplicationRoles.AddRangeAsync(roles);
+        _logger.LogInformation("Seeded {Count} application roles", roles.Count);
     }
 
     private SystemSetting CreateSetting(

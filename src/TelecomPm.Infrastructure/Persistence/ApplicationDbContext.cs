@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System.Reflection;
 using TelecomPM.Domain.Common;
+using TelecomPM.Domain.Entities.ApplicationRoles;
 using TelecomPM.Domain.Entities.ApprovalRecords;
 using TelecomPM.Domain.Entities.AuditLogs;
 using TelecomPM.Domain.Entities.BatteryDischargeTests;
@@ -51,6 +52,7 @@ public class ApplicationDbContext : DbContext
     // User & Office
     public DbSet<User> Users => Set<User>();
     public DbSet<Office> Offices => Set<Office>();
+    public DbSet<ApplicationRole> ApplicationRoles => Set<ApplicationRole>();
 
     // Material
     public DbSet<Material> Materials => Set<Material>();

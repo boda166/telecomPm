@@ -55,6 +55,7 @@ public static class DependencyInjection
         services.AddScoped<IChecklistTemplateRepository, ChecklistTemplateRepository>();
         services.AddScoped<IBatteryDischargeTestRepository, BatteryDischargeTestRepository>();
         services.AddScoped<ISystemSettingsRepository, SystemSettingsRepository>();
+        services.AddScoped<IApplicationRoleRepository, ApplicationRoleRepository>();
 
         // Domain event dispatcher
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();

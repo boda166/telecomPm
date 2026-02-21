@@ -1,13 +1,13 @@
 using System.Reflection;
 using FluentAssertions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using TelecomPm.Api.Controllers;
 using TelecomPM.Api.Authorization;
-using TelecomPM.Domain.Enums;
+using TelecomPM.Application.Security;
 using Xunit;
 
 namespace TelecomPM.Application.Tests.Services;
@@ -39,9 +39,10 @@ public class ApiAuthorizationPoliciesTests
     }
 
     [Fact]
-    public void CanManageSettingsPolicy_ShouldRequireAdminRoleOnly()
+    public async Task CanManageSettingsPolicy_ShouldRequireSettingsEditPermission()
     {
         var services = new ServiceCollection();
+        services.AddLogging();
         services.AddAuthorization(ApiAuthorizationPolicies.Configure);
         var provider = services.BuildServiceProvider();
 
@@ -49,8 +50,24 @@ public class ApiAuthorizationPoliciesTests
         var policy = options.GetPolicy(ApiAuthorizationPolicies.CanManageSettings);
 
         policy.Should().NotBeNull();
-        var roleRequirement = policy!.Requirements.OfType<RolesAuthorizationRequirement>().Single();
-        roleRequirement.AllowedRoles.Should().BeEquivalentTo(new[] { UserRole.Admin.ToString() });
+
+        var authService = provider.GetRequiredService<IAuthorizationService>();
+
+        var allowedPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new[]
+        {
+            new Claim(PermissionConstants.ClaimType, PermissionConstants.SettingsEdit)
+        }, "test"));
+
+        var deniedPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new[]
+        {
+            new Claim(PermissionConstants.ClaimType, PermissionConstants.SettingsView)
+        }, "test"));
+
+        var allowed = await authService.AuthorizeAsync(allowedPrincipal, policy!);
+        var denied = await authService.AuthorizeAsync(deniedPrincipal, policy!);
+
+        allowed.Succeeded.Should().BeTrue();
+        denied.Succeeded.Should().BeFalse();
     }
 
     [Theory]
@@ -66,6 +83,7 @@ public class ApiAuthorizationPoliciesTests
     [InlineData(typeof(MaterialsController), ApiAuthorizationPolicies.CanViewMaterials)]
     [InlineData(typeof(MaterialsController), ApiAuthorizationPolicies.CanManageMaterials)]
     [InlineData(typeof(SettingsController), ApiAuthorizationPolicies.CanManageSettings)]
+    [InlineData(typeof(RolesController), ApiAuthorizationPolicies.CanManageSettings)]
     public void Controllers_ShouldReferenceExpectedPolicies(Type controllerType, string policy)
     {
         var methods = controllerType

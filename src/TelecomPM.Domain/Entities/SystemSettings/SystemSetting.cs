@@ -12,7 +12,7 @@ public sealed class SystemSetting : AggregateRoot<Guid>
     public string? Description { get; private set; }
     public bool IsEncrypted { get; private set; }
     public DateTime UpdatedAtUtc { get; private set; }
-    public string UpdatedBy { get; private set; } = string.Empty;
+    public new string UpdatedBy { get; private set; } = string.Empty;
 
     private SystemSetting() : base()
     {
