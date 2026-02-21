@@ -12,6 +12,7 @@ public sealed class SitePowerSystem : Entity<Guid>
     
     // Rectifier
     public RectifierBrand RectifierBrand { get; private set; }
+    public string? RectifierBrandRaw { get; private set; }
     public int RectifierModulesCount { get; private set; }
     public string? RectifierControllerType { get; private set; }
     
@@ -42,6 +43,7 @@ public sealed class SitePowerSystem : Entity<Guid>
     public bool HasPowerMeter { get; private set; }
     public int? PowerMeterRate { get; private set; }
     public string? ElectricityPhaseType { get; private set; }
+    public string? PowerSourceLabel { get; private set; }
     public int? RouterCount { get; private set; }
     public int? ModemCount { get; private set; }
 
@@ -127,5 +129,33 @@ public sealed class SitePowerSystem : Entity<Guid>
     {
         RouterCount = routerCount;
         ModemCount = modemCount;
+    }
+
+    public void SetRawPowerLabels(string? powerSourceLabel, string? rectifierBrandRaw)
+    {
+        PowerSourceLabel = string.IsNullOrWhiteSpace(powerSourceLabel) ? null : powerSourceLabel.Trim();
+        RectifierBrandRaw = string.IsNullOrWhiteSpace(rectifierBrandRaw) ? null : rectifierBrandRaw.Trim();
+    }
+
+    public static RectifierBrand NormalizeRectifierBrand(string? rawRectifierBrand)
+    {
+        if (string.IsNullOrWhiteSpace(rawRectifierBrand))
+            return RectifierBrand.Other;
+
+        var normalized = rawRectifierBrand.Trim().ToUpperInvariant();
+
+        if (normalized.Contains("DELTA"))
+            return RectifierBrand.Delta;
+
+        if (normalized.Contains("HUAWEI") || normalized.Contains("HUW"))
+            return RectifierBrand.Huawei;
+
+        if (normalized.Contains("NSN") || normalized.Contains("NOKIA"))
+            return RectifierBrand.Nokia;
+
+        if (normalized.Contains("EMERSON"))
+            return RectifierBrand.Emerson;
+
+        return RectifierBrand.Other;
     }
 }

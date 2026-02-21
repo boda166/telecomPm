@@ -8,6 +8,9 @@ public enum RectifierBrand
     Saft = 3,
     Lorain = 4,
     Ascom = 5,
+    Huawei = 20,
+    Nokia = 21,
+    Emerson = 22,
     Other = 99
 }
 
