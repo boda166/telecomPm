@@ -33,6 +33,8 @@ namespace TelecomPm.Infrastructure.Persistence.Configurations
                     .HasPrecision(18, 2);
                 sector.Property(s => s.SectorTechnology)
                     .HasMaxLength(100);
+                sector.Property(s => s.BandLabel)
+                    .HasMaxLength(50);
                 sector.Property(s => s.RruSolution)
                     .HasMaxLength(100);
                 sector.Property(s => s.FeederSize)

@@ -38,6 +38,12 @@ namespace TelecomPm.Infrastructure.Persistence.Configurations
             builder.Property(p => p.CabinetVendor)
                 .HasMaxLength(100);
 
+            builder.Property(p => p.PowerSourceLabel)
+                .HasMaxLength(100);
+
+            builder.Property(p => p.RectifierBrandRaw)
+                .HasMaxLength(200);
+
             builder.HasIndex(p => p.SiteId);
         }
     }

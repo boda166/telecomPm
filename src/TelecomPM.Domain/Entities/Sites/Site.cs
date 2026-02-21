@@ -30,12 +30,16 @@ public sealed class Site : AggregateRoot<Guid>
     // BSC Info
     public string BSCName { get; private set; } = string.Empty;
     public string BSCCode { get; private set; } = string.Empty;
+    public string? TelecomEgyptName { get; private set; }
+    public string? OperationalZone { get; private set; }
     
     // Contractor
     public string Subcontractor { get; private set; } = string.Empty;
     public string MaintenanceArea { get; private set; } = string.Empty;
     public string? ZTEMonitoringStatus { get; private set; }
     public string? GeneralNotes { get; private set; }
+    public SiteEnclosureType? EnclosureType { get; private set; }
+    public string? EnclosureTypeRaw { get; private set; }
     
     // Components (Navigation Properties)
     public SiteTowerInfo TowerInfo { get; private set; } = null!;
@@ -122,6 +126,12 @@ public sealed class Site : AggregateRoot<Guid>
         BSCCode = bscCode;
     }
 
+    public void SetNetworkContext(string? telecomEgyptName, string? operationalZone)
+    {
+        TelecomEgyptName = telecomEgyptName;
+        OperationalZone = operationalZone;
+    }
+
     public void SetContractorInfo(string subcontractor, string maintenanceArea)
     {
         Subcontractor = subcontractor;
@@ -132,6 +142,12 @@ public sealed class Site : AggregateRoot<Guid>
     {
         ZTEMonitoringStatus = zteMonitoringStatus;
         GeneralNotes = generalNotes;
+    }
+
+    public void SetEnclosureInfo(SiteEnclosureType? enclosureType, string? enclosureTypeRaw)
+    {
+        EnclosureType = enclosureType;
+        EnclosureTypeRaw = enclosureTypeRaw;
     }
 
     public void SetTowerInfo(SiteTowerInfo towerInfo)

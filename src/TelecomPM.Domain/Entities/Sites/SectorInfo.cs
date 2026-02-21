@@ -14,6 +14,7 @@ public sealed class SectorInfo
     public int? ElectricalTilt { get; private set; }
     public int? MechanicalTilt { get; private set; }
     public string? SectorTechnology { get; private set; }
+    public string? BandLabel { get; private set; }
     public string? RruSolution { get; private set; }
     public string? FeederSize { get; private set; }
     public decimal? FeederLengthM { get; private set; }
@@ -48,12 +49,14 @@ public sealed class SectorInfo
 
     public void SetDeploymentDetails(
         string? sectorTechnology,
+        string? bandLabel,
         string? rruSolution,
         string? feederSize,
         decimal? feederLengthM,
         string? antennaType = null)
     {
         SectorTechnology = sectorTechnology;
+        BandLabel = bandLabel;
         RruSolution = rruSolution;
         FeederSize = feederSize;
         FeederLengthM = feederLengthM;

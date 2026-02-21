@@ -11,11 +11,9 @@ public enum SiteType
     Indoor = 6,
     Repeater = 7,
     MicroNano = 8,
-    BTS = 10,
-    BSCExtended = 11,
-    GreenField = 12,
-    RoofTop = 13,
-    IndoorExtended = 14
+    GreenField = 20,
+    RoofTop = 21,
+    BTS = 22
 }
 
 public enum SiteComplexity
@@ -33,6 +31,13 @@ public enum SiteStatus
     Decommissioned = 4
 }
 
+public enum SiteEnclosureType
+{
+    Shelter = 1,
+    OutdoorCabinet = 2,
+    Grill = 3
+}
+
 public enum TowerType
 {
     GFTower = 1,        // Ground Floor Tower
@@ -45,7 +50,8 @@ public enum TowerType
     Billboard = 8,
     FlagPole = 9,
     MobileStation = 10,
-    SpecialCamouflage = 11
+    SpecialCamouflage = 11,
+    RTStubTower = 12
 }
 
 public enum TransmissionType

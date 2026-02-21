@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TelecomPM.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using TelecomPM.Infrastructure.Persistence;
 namespace TelecomPm.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260221043318_AddSiteSharingAntennaPositions")]
+    partial class AddSiteSharingAntennaPositions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -752,10 +755,6 @@ namespace TelecomPm.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("OfficeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("OperationalZone")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<string>("Region")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -777,10 +776,6 @@ namespace TelecomPm.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Subcontractor")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("TelecomEgyptName")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
@@ -1452,10 +1447,6 @@ namespace TelecomPm.Infrastructure.Persistence.Migrations
 
                     b.Property<int>("CompletionPercentage")
                         .HasColumnType("int");
-
-                    b.Property<string>("ContactPersonName")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");

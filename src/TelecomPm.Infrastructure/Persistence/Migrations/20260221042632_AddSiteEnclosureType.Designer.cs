@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TelecomPM.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using TelecomPM.Infrastructure.Persistence;
 namespace TelecomPm.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260221042632_AddSiteEnclosureType")]
+    partial class AddSiteEnclosureType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -752,10 +755,6 @@ namespace TelecomPm.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("OfficeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("OperationalZone")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<string>("Region")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -777,10 +776,6 @@ namespace TelecomPm.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Subcontractor")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("TelecomEgyptName")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
@@ -1157,10 +1152,6 @@ namespace TelecomPm.Infrastructure.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("HostSiteCode")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -1170,21 +1161,11 @@ namespace TelecomPm.Infrastructure.Persistence.Migrations
                     b.Property<bool>("PowerShared")
                         .HasColumnType("bit");
 
-                    b.Property<int>("SharingRadioAntennaCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SharingTxAntennaCount")
-                        .HasColumnType("int");
-
                     b.Property<Guid>("SiteId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("TowerShared")
                         .HasColumnType("bit");
-
-                    b.Property<string>("TxEnclosureType")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -1301,13 +1282,6 @@ namespace TelecomPm.Infrastructure.Persistence.Migrations
 
                     b.Property<int>("LinksCount")
                         .HasColumnType("int");
-
-                    b.Property<int?>("MWLinkCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NodalDegreeRaw")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<Guid>("SiteId")
                         .HasColumnType("uniqueidentifier");
@@ -1452,10 +1426,6 @@ namespace TelecomPm.Infrastructure.Persistence.Migrations
 
                     b.Property<int>("CompletionPercentage")
                         .HasColumnType("int");
-
-                    b.Property<string>("ContactPersonName")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -2880,42 +2850,6 @@ namespace TelecomPm.Infrastructure.Persistence.Migrations
                         .HasForeignKey("TelecomPM.Domain.Entities.Sites.SiteSharing", "SiteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.OwnsMany("TelecomPM.Domain.Entities.Sites.SharedAntennaPosition", "AntennaPositions", b1 =>
-                        {
-                            b1.Property<Guid>("Id")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<decimal>("Azimuth")
-                                .HasPrecision(6, 2)
-                                .HasColumnType("decimal(6,2)");
-
-                            b1.Property<string>("Category")
-                                .IsRequired()
-                                .HasMaxLength(20)
-                                .HasColumnType("nvarchar(20)");
-
-                            b1.Property<decimal>("HbaMeters")
-                                .HasPrecision(6, 2)
-                                .HasColumnType("decimal(6,2)");
-
-                            b1.Property<int>("Index")
-                                .HasColumnType("int");
-
-                            b1.Property<Guid>("SiteSharingId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("SiteSharingId");
-
-                            b1.ToTable("SiteSharingAntennaPositions", (string)null);
-
-                            b1.WithOwner()
-                                .HasForeignKey("SiteSharingId");
-                        });
-
-                    b.Navigation("AntennaPositions");
                 });
 
             modelBuilder.Entity("TelecomPM.Domain.Entities.Sites.SiteTowerInfo", b =>
